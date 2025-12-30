@@ -1,20 +1,10 @@
 from datetime import datetime
 
-from app import app
-from models import db, Message
+from server.app import app
+from server.models import db, Message
 
 class TestMessage:
     '''Message model in models.py'''
-
-    with app.app_context():
-        m = Message.query.filter(
-            Message.body == "Hello 👋"
-            ).filter(Message.username == "Liza")
-
-        for message in m:
-            db.session.delete(message)
-
-        db.session.commit()
 
     def test_has_correct_columns(self):
         '''has columns for message body, username, and creation time.'''

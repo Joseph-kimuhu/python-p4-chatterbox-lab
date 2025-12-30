@@ -1,20 +1,10 @@
 from datetime import datetime
 
-from app import app
-from models import db, Message
+from server.app import app
+from server.models import db, Message
 
 class TestApp:
     '''Flask application in app.py'''
-
-    with app.app_context():
-        m = Message.query.filter(
-            Message.body == "Hello 👋"
-            ).filter(Message.username == "Liza")
-
-        for message in m:
-            db.session.delete(message)
-
-        db.session.commit()
 
     def test_has_correct_columns(self):
         with app.app_context():
@@ -89,9 +79,16 @@ class TestApp:
         '''updates the body of a message in the database.'''
         with app.app_context():
 
-            m = Message.query.first()
-            id = m.id
-            body = m.body
+            # Create a message first
+            original_message = Message(
+                body="Original message",
+                username="TestUser"
+            )
+            db.session.add(original_message)
+            db.session.commit()
+
+            id = original_message.id
+            body = original_message.body
 
             app.test_client().patch(
                 f'/messages/{id}',
@@ -111,9 +108,16 @@ class TestApp:
         '''returns data for the updated message as JSON.'''
         with app.app_context():
 
-            m = Message.query.first()
-            id = m.id
-            body = m.body
+            # Create a message first
+            original_message = Message(
+                body="Original message",
+                username="TestUser"
+            )
+            db.session.add(original_message)
+            db.session.commit()
+
+            id = original_message.id
+            body = original_message.body
 
             response = app.test_client().patch(
                 f'/messages/{id}',
